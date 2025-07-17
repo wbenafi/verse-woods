@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Fraunces";
+  src: url("/fonts/Fraunces-VariableFont_SOFT,WONK,opsz,wght.ttf") format("truetype");
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+@layer base {
+  :root {
+    --background: 36 52% 91%;            /* beige claro cálido */
+    --foreground: 50 5% 48%;             
+
+    --card: 36 52% 96%;                  /* fondo claro para tarjetas */
+    --card-foreground: 154 15% 18%;
+
+    --popover: 36 52% 91%;
+    --popover-foreground: 154 15% 18%;
+
+    --primary: 154 22% 38%;              /* verde bosque apagado */
+    --primary-foreground: 0 0% 100%;     /* blanco para contraste */
+
+    --secondary: 240 25% 85%;            /* lavanda muy pálido (para acentos) */
+    --secondary-foreground: 240 15% 30%;
+
+    --muted: 150 15% 80%;                /* verde menta pálido */
+    --muted-foreground: 150 10% 35%;
+
+    --accent: 120 30% 70%;               /* verde hoja clara */
+    --accent-foreground: 120 20% 25%;
+
+    --destructive: 0 60% 58%;            /* rojo tenue para errores */
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 154 10% 75%;               /* gris verdoso suave */
+    --input: 154 10% 85%;                /* para campos de texto */
+    --ring: 154 22% 45%;                 /* verde medio (focus ring) */
+
+    --chart-1: 154 22% 38%;              /* verde bosque profundo */
+    --chart-2: 240 25% 75%;              /* lavanda pastel */
+    --chart-3: 120 30% 65%;              /* verde hoja claro */
+    --chart-4: 220 20% 70%;              /* azul apagado */
+    --chart-5: 45 60% 70%;               /* dorado pastel */
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 157 15% 10%;
+    --foreground: 50 5% 48%;
+    --card: 157 15% 15%;
+    --card-foreground: 107 33% 86%;
+    --popover: 157 15% 15%;
+    --popover-foreground: 107 33% 86%;
+    --primary: 148 38% 75%;
+    --primary-foreground: 157 29% 30%;
+    --secondary: 162 29% 33%;
+    --secondary-foreground: 107 33% 86%;
+    --muted: 162 15% 25%;
+    --muted-foreground: 148 25% 80%;
+    --accent: 148 38% 75%;
+    --accent-foreground: 157 29% 30%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 162 15% 25%;
+    --input: 162 15% 25%;
+    --ring: 148 38% 75%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.text-fraunces {
+  font-family: var(--font-fraunces);
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
