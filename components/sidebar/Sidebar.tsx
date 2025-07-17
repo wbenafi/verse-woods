@@ -2,11 +2,12 @@ import Link from "next/link";
 import { Lightbulb, NotebookPen, NotebookText } from "lucide-react";
 import { VerseWoodsIcon } from "../icons/VerseWoodsIcon";
 import { LoginLogoutButton } from "../auth/LoginLogoutButton";
+import { cn } from "@/lib/utils";
 
-export default function Sidebar() {
+export default function Sidebar({ className }: { className?: string }) {
 
   return (
-    <nav className="w-60 bg-background my-10 rounded-[40px] py-8">
+    <nav className={cn("w-60 bg-background my-10 rounded-[40px] py-8", className)}>
       <div className="flex flex-col gap-y-4 h-full">
         <div className="flex flex-row items-center gap-x-2 justify-center">
           <VerseWoodsIcon className="w-14 h-14 text-primary" />

@@ -16,7 +16,7 @@ export async function Dashboard() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const query = (() => {
+  const ideasQuery = (() => {
     const query = supabase.from("idea").select("*");
 
     if (user?.id) {
@@ -30,15 +30,29 @@ export async function Dashboard() {
     return query;
   })();
 
-  const { data: ideas } = await query;
+  const lyricsQuery = (() => {
+    const query = supabase.from("lyrics").select("*");
 
-  const { data: lyrics } = await supabase.from("lyrics").select("*");
+    if (user?.id) {
+      query.eq("created_by", user.id);
+    }
+
+    query.order("updated_at", { ascending: false });
+
+    query.limit(3);
+
+    return query;
+  })(); 
+
+  const { data: ideas } = await ideasQuery;
+
+  const { data: lyrics } = await lyricsQuery;
 
   return (
     <>
-      <div className="mb-8">
-        <h2 className={`text-3xl font-bold text-primary text-fraunces`}>
-          Hola! Escribe lo que sea, y deja que tu espíritu fluya en cada verso,
+      <div className="mb-8 ">
+        <h2 className={`text-2xl md:text-3xl font-bold text-primary text-fraunces`}>
+          Hola! Escribe lo que sea, y deja que tu espíritu fluya en cada verso
         </h2>
         <div className="flex flex-col gap-y-6 mt-6">
           <div className="flex flex-col gap-y-2">
