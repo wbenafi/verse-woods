@@ -39,7 +39,7 @@ export async function Dashboard() {
 
     query.order("updated_at", { ascending: false });
 
-    query.limit(3);
+    query.limit(6);
 
     return query;
   })(); 
@@ -58,7 +58,38 @@ export async function Dashboard() {
           <div className="flex flex-col gap-y-2">
             <h3 className="text-lg font-bold text-gray-700">Ideas recientes</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 grid-rows-[repeat(2,auto)]">
-              {(ideas ?? []).map((idea) => (
+              {(() => {
+                const testIdeas = [
+                  {
+                    id: 1,
+                    title: "Inspiración Matutina",
+                    content: "Una idea que surgió al amanecer, cuando la luz del sol ilumina todo con esperanza y nuevas posibilidades.",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                    lyrics: null,
+                  },
+                  {
+                    id: 2,
+                    title: "Reflexión Nocturna",
+                    content: "Pensamientos que aparecen en la quietud de la noche, cuando todo está en calma y la mente puede vagar libremente.",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                    lyrics: null,
+                  },
+                  {
+                    id: 3,
+                    title: "Momento de Creatividad",
+                    content: "Una chispa de creatividad que puede convertirse en algo grande, solo necesita ser capturada y desarrollada.",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                    lyrics: null,
+                  },
+                ];
+                return (ideas && ideas.length > 0 ? ideas : testIdeas);
+              })().map((idea) => (
                 <Card
                   key={idea.id}
                   className="p-4 bg-background border-2 border-foreground/20 grid [grid-template-rows:subgrid] row-span-2"
@@ -81,7 +112,35 @@ export async function Dashboard() {
           <div className="flex flex-col gap-y-2">
             <h3 className="text-lg font-bold text-gray-700">Letras</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 grid-rows-[repeat(2,auto)]">
-              {(lyrics ?? []).map((lyric) => (
+              {(() => {
+                const testLyrics = [
+                  {
+                    id: 1,
+                    name: "Canción de Prueba",
+                    content: "Esta es una canción de prueba\nPara ver cómo se ve el diseño\nCuando no hay datos reales\nSolo texto de ejemplo",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                  },
+                  {
+                    id: 2,
+                    name: "Versos del Alma",
+                    content: "En el silencio de la noche\nMis pensamientos vuelan libres\nComo pájaros en el cielo\nBuscando su destino",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                  },
+                  {
+                    id: 3,
+                    name: "Melodía Perdida",
+                    content: "Una melodía que se perdió\nEn los recuerdos del ayer\nSigue sonando en mi mente\nComo un eco que no se va",
+                    created_at: new Date().toISOString(),
+                    created_by: null,
+                    updated_at: new Date().toISOString(),
+                  },
+                ];
+                return (lyrics && lyrics.length > 0 ? lyrics : testLyrics);
+              })().map((lyric) => (
                 <Card
                   key={lyric.id}
                   className="p-4 bg-background border-2 border-foreground/20 grid [grid-template-rows:subgrid] row-span-2"
