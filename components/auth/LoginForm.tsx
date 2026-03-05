@@ -8,9 +8,9 @@ import { Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { useAuth } from '@/contexts/AuthContext'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { useRouter } from 'next/navigation'
+import { useSignIn } from '@clerk/nextjs'
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -27,7 +27,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [authError, setAuthError] = useState<string | null>(null)
-  const { signIn } = useAuth()
+  const { isLoaded, signIn, setActive } = useSignIn()
   const router = useRouter()
 
   const {
@@ -39,18 +39,39 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
   })
 
   const onSubmit = async (data: LoginFormData) => {
+    if (!isLoaded) {
+      return
+    }
+
     setIsLoading(true)
     setAuthError(null)
-    
-    const { error } = await signIn(data.email, data.password)
-    
-    if (error) {
-      setAuthError(error.message)
-    } else {
-      router.push("/")
+
+    try {
+      const signInResult = await signIn.create({
+        identifier: data.email,
+        password: data.password,
+      })
+
+      if (signInResult.status === 'complete') {
+        await setActive({ session: signInResult.createdSessionId })
+        router.push('/')
+        return
+      }
+
+      setAuthError('Additional verification is required to complete sign in.')
+    } catch (error: unknown) {
+      const message =
+        typeof error === 'object' &&
+        error !== null &&
+        'errors' in error &&
+        Array.isArray((error as { errors?: unknown[] }).errors) &&
+        typeof (error as { errors: { longMessage?: string }[] }).errors[0]?.longMessage === 'string'
+          ? (error as { errors: { longMessage: string }[] }).errors[0].longMessage
+          : 'Unable to sign in. Please check your credentials and try again.'
+      setAuthError(message)
+    } finally {
+      setIsLoading(false)
     }
-    
-    setIsLoading(false)
   }
 
   return (
@@ -75,7 +96,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
               type="email"
               placeholder="Enter your email"
               className="pl-10 h-12"
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
           </div>
           {errors.email && (
@@ -93,7 +114,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
               type={showPassword ? 'text' : 'password'}
               placeholder="Enter your password"
               className="pl-10 pr-10 h-12"
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
             <button
               type="button"
@@ -117,7 +138,7 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
         <Button
           type="submit"
           className="w-full h-12 text-base font-medium"
-          disabled={isLoading}
+          disabled={isLoading || !isLoaded}
         >
           {isLoading ? 'Signing in...' : 'Sign in'}
         </Button>

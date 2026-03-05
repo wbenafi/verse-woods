@@ -8,8 +8,9 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/contexts/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { useSignUp } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 const signUpSchema = z
   .object({
@@ -34,7 +35,8 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const { signUp } = useAuth();
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const router = useRouter();
 
   const {
     register,
@@ -45,19 +47,40 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
   });
 
   const onSubmit = async (data: SignUpFormData) => {
+    if (!isLoaded) {
+      return;
+    }
+
     setIsLoading(true);
     setAuthError(null);
     setSuccessMessage(null);
 
-    const { error } = await signUp(data.email, data.password);
+    try {
+      const signUpResult = await signUp.create({
+        emailAddress: data.email,
+        password: data.password,
+      });
 
-    if (error) {
-      setAuthError(error.message);
-    } else {
-      setSuccessMessage("Check your email for a verification link!");
+      if (signUpResult.status === "complete") {
+        await setActive({ session: signUpResult.createdSessionId });
+        router.push("/");
+        return;
+      }
+
+      setSuccessMessage("Account created. Complete the verification flow in Clerk.");
+    } catch (error: unknown) {
+      const message =
+        typeof error === "object" &&
+        error !== null &&
+        "errors" in error &&
+        Array.isArray((error as { errors?: unknown[] }).errors) &&
+        typeof (error as { errors: { longMessage?: string }[] }).errors[0]?.longMessage === "string"
+          ? (error as { errors: { longMessage: string }[] }).errors[0].longMessage
+          : "Unable to create account. Please try again.";
+      setAuthError(message);
+    } finally {
+      setIsLoading(false);
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -82,7 +105,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
               type="email"
               placeholder="Enter your email"
               className="pl-10 h-12"
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
           </div>
           {errors.email && (
@@ -100,7 +123,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
               type={showPassword ? "text" : "password"}
               placeholder="Create a password"
               className="pl-10 pr-10 h-12"
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
             <button
               type="button"
@@ -131,7 +154,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
               type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm your password"
               className="pl-10 pr-10 h-12"
-              disabled={isLoading}
+              disabled={isLoading || !isLoaded}
             />
             <button
               type="button"
@@ -167,7 +190,7 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
         <Button
           type="submit"
           className="w-full h-12 text-base font-medium"
-          disabled={isLoading}
+          disabled={isLoading || !isLoaded}
         >
           {isLoading ? "Creating account..." : "Create account"}
         </Button>

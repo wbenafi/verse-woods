@@ -42,7 +42,7 @@ export function AuthCard() {
         
         <div className="text-center">
           <p className="text-xs text-primary-foreground">
-            Secured by Supabase Authentication
+            Secured by Clerk Authentication
           </p>
         </div>
       </div>
