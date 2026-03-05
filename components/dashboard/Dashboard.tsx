@@ -6,8 +6,11 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import utc from "dayjs/plugin/utc";
 import "dayjs/locale/es";
-import { useConvexAuth, useQuery } from "convex/react";
+import { useConvexAuth, useMutation, useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { useRouter } from "next/navigation";
+import { Plus } from "lucide-react";
+import { Button } from "../ui/button";
 
 dayjs.extend(utc);
 dayjs.extend(relativeTime);
@@ -17,9 +20,16 @@ export function Dashboard() {
   const { isAuthenticated, isLoading: isAuthLoading } = useConvexAuth();
   const ideas = useQuery(api.ideas.listByUser, isAuthenticated ? {} : "skip");
   const lyrics = useQuery(api.lyrics.listByUser, isAuthenticated ? {} : "skip");
+  const createIdea = useMutation(api.ideas.create);
+  const router = useRouter();
 
   const ideaItems = ideas ?? [];
   const lyricItems = lyrics ?? [];
+
+  const handleNewIdea = async () => {
+    const id = await createIdea({});
+    router.push(`/write?ideaId=${id}`);
+  };
 
   return (
     <>
@@ -29,19 +39,31 @@ export function Dashboard() {
         </h2>
         <div className="flex flex-col gap-y-6 mt-6">
           <div className="flex flex-col gap-y-2">
-            <h3 className="text-lg font-bold text-gray-700">Ideas recientes</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-handwritten text-xl text-primary">Ideas recientes</h3>
+              <Button
+                variant="poetic"
+                size="sm"
+                onClick={handleNewIdea}
+                className="gap-1 text-xs px-2.5 py-1 h-auto"
+              >
+                <Plus className="h-3 w-3" />
+                Nueva idea
+              </Button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 grid-rows-[repeat(2,auto)]">
               {ideaItems.length === 0 && (
                 <Card className="p-4 bg-background border-2 border-foreground/20 col-span-full text-center">
                   <p className="text-sm text-foreground/60">
-                    Aun no tienes ideas guardadas en Convex.
+                    Aun no tienes ideas guardadas. ¡Empieza escribiendo una!
                   </p>
                 </Card>
               )}
               {ideaItems.map((idea) => (
                 <Card
                   key={idea._id}
-                  className="p-4 bg-background border-2 border-foreground/20 grid [grid-template-rows:subgrid] row-span-2"
+                  onClick={() => router.push(`/write?ideaId=${idea._id}`)}
+                  className="card-poetic-interactive p-4 bg-background border-2 border-foreground/20 grid [grid-template-rows:subgrid] row-span-2 cursor-pointer hover:border-primary/50"
                 >
                   <div>
                     <h4 className="text-base font-bold text-primary italic line-clamp-2">
@@ -67,7 +89,7 @@ export function Dashboard() {
             </div>
           </div>
           <div className="flex flex-col gap-y-2">
-            <h3 className="text-lg font-bold text-gray-700">Letras</h3>
+            <h3 className="text-handwritten text-xl text-primary">Letras</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 grid-rows-[repeat(2,auto)]">
               {lyricItems.length === 0 && (
                 <Card className="p-4 bg-background border-2 border-foreground/20 col-span-full text-center">

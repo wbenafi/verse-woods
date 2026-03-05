@@ -189,7 +189,8 @@ export function SignUpForm({ onToggleMode }: SignUpFormProps) {
 
         <Button
           type="submit"
-          className="w-full h-12 text-base font-medium"
+          variant="poetic"
+          className="w-full h-12 text-base"
           disabled={isLoading || !isLoaded}
         >
           {isLoading ? "Creating account..." : "Create account"}

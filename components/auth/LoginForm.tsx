@@ -137,7 +137,8 @@ export function LoginForm({ onToggleMode }: LoginFormProps) {
 
         <Button
           type="submit"
-          className="w-full h-12 text-base font-medium"
+          variant="poetic"
+          className="w-full h-12 text-base"
           disabled={isLoading || !isLoaded}
         >
           {isLoading ? 'Signing in...' : 'Sign in'}

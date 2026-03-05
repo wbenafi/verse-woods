@@ -101,3 +101,34 @@
   font-weight: 100 900;
   font-display: swap;
 }
+
+.text-handwritten {
+  font-family: var(--font-fraunces);
+  font-style: italic;
+  font-weight: 300;
+  font-variation-settings: "WONK" 1, "SOFT" 100, "opsz" 9;
+}
+
+@layer components {
+  .btn-poetic {
+    font-family: var(--font-fraunces);
+    font-style: italic;
+    border-radius: 3px 14px 8px 20px / 18px 4px 16px 3px !important;
+    transition: border-radius 0.25s ease, transform 0.15s ease, background-color 0.2s ease, border-color 0.2s ease;
+  }
+  .btn-poetic:hover {
+    border-radius: 10px 4px 18px 6px / 4px 20px 3px 14px;
+    transform: translateY(-1px);
+  }
+  .btn-poetic:active {
+    transform: translateY(0px);
+  }
+
+  .card-poetic {
+    border-radius: 4px 22px 8px 26px / 24px 4px 26px 6px;
+    transition: border-radius 0.3s ease, transform 0.2s ease, border-color 0.2s ease;
+  }
+  .card-poetic-interactive:hover {
+    transform: translateY(-1px);
+  }
+}

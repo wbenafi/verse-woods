@@ -12,7 +12,7 @@ export function LoginLogoutButton({ className }: { className?: string }) {
   if (isSignedIn) {
     return (
       <SignOutButton>
-        <Button variant="outline" className={cn("mx-4", className)}>
+        <Button variant="poetic-ghost" className={cn("mx-4", className)}>
           <LogOut className="w-4 h-4 mr-2" />
           Salir
         </Button>
@@ -21,7 +21,7 @@ export function LoginLogoutButton({ className }: { className?: string }) {
   }
 
   return (
-    <Button asChild variant="outline" className={cn("mx-4", className)}>
+    <Button asChild variant="poetic-ghost" className={cn("mx-4", className)}>
       <Link href="/auth" className="flex items-center">
           <LogIn className="w-4 h-4 mr-2" />
           Iniciar sesión
