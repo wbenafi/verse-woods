@@ -1,12 +1,11 @@
 import { AuthCard } from "@/components/auth/AuthCard";
-import { createClient } from "@/utils/subabase/server";
+import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
 export default async function AuthPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const { userId } = await auth();
 
-  if (user) {
+  if (userId) {
     redirect("/");
   }
 

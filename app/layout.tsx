@@ -1,9 +1,10 @@
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { AuthProvider } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import localFont from "next/font/local";
+import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexClientProvider } from "@/components/providers/ConvexClientProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,9 +27,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={cn(inter.className, fraunces.variable, "bg-background")}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <ClerkProvider>
+          <ConvexClientProvider>{children}</ConvexClientProvider>
+        </ClerkProvider>
       </body>
     </html>
   );
